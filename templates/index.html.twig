@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Market rates {% endblock %}
+
+{% block body %}
+
+<h1>Test</h1>
+
+    <h1>Binance Live Trades</h1>
+    <ul id="trade-list"></ul>
+
+    <script>
+        const eventSource = new EventSource("{{ mercure('binance/trades')|escape('js') }}");
+        eventSource.onmessage = event => {
+            console.log(JSON.parse(event.data));
+        }
+        eventSource.onerror = (err) => {
+            console.error("EventSource failed:", err);
+        };
+    </script>
+
+{% endblock %}
