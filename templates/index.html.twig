@@ -1,21 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Market rates {% endblock %}
+{% block title %}Binance Live Market Trades{% endblock %}
 
 {% block body %}
 
-<h1>Test</h1>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Binance Live Market Trades</h2>
 
-    <h1>Binance Live Trades</h1>
-    <ul id="trade-list"></ul>
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Market</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Time</th>
+            </tr>
+            </thead>
+            <tbody id="trade-table-body"></tbody>
+        </table>
+    </div>
+
 
     <script>
         const eventSource = new EventSource("{{ mercure('binance/trades')|escape('js') }}");
-        eventSource.onmessage = event => {
-            console.log(JSON.parse(event.data));
-        }
-        eventSource.onerror = (err) => {
-            console.error("EventSource failed:", err);
+
+        const markets = ['btcusdt', 'ethusdt', 'bnbusdt'];
+
+        eventSource.onmessage = function (event) {
+            const trade = JSON.parse(event.data);
+            const tableBody = document.getElementById("trade-table-body");
+
+            if (!markets.includes(trade.market.toLowerCase())) {
+                return; // Ignore other symbols
+            }
+
+            const row = `<tr>
+                <td>${trade.market.toUpperCase()}</td>
+                <td>${trade.price}</td>
+                <td>${trade.quantity}</td>
+                <td>${new Date(trade.timestamp).toLocaleTimeString()}</td>
+            </tr>`;
+
+            tableBody.insertAdjacentHTML("afterbegin", row);
+            if (tableBody.rows.length > 20) {
+                tableBody.deleteRow(20);
+            }
         };
     </script>
 

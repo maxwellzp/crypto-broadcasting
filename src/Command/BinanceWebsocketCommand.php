@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -13,15 +15,13 @@ use App\Service\BinanceWebSocketService;
 
 #[AsCommand(
     name: 'app:binance-websocket',
-    description: 'Add a short description for your command',
+    description: 'Command ',
 )]
 class BinanceWebsocketCommand extends Command
 {
-    private BinanceWebSocketService $webSocketService;
-    public function __construct(BinanceWebSocketService $webSocketService)
+    public function __construct(private BinanceWebSocketService $webSocketService)
     {
         parent::__construct();
-        $this->webSocketService = $webSocketService;
     }
 
     protected function configure(): void
@@ -35,9 +35,9 @@ class BinanceWebsocketCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $output->writeln('Listener...');
+        $io->writeln('Listening to Binance socket.');
 
         $this->webSocketService->listen();
-        return 0;
+        return Command::SUCCESS;
     }
 }
