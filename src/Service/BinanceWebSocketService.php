@@ -16,8 +16,7 @@ class BinanceWebSocketService
     public function __construct(
         private HubInterface $hub,
         private LoggerInterface $logger
-    )
-    {
+    ) {
     }
 
     private string $wsUrl = "wss://fstream.binance.com/stream?streams=btcusdt@trade/ethusdt@trade/bnbusdt@trade";
@@ -42,7 +41,6 @@ class BinanceWebSocketService
                     $this->broadcastTradeUpdate($tradeData['s'], $tradeData['p'], $tradeData['q'], $tradeData['t']);
                 }
             }
-
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $this->logger->error($e->getTraceAsString());
