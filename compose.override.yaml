@@ -1,7 +1,7 @@
 
-#services:
-####> symfony/mercure-bundle ###
-#  mercure:
-#    ports:
-#      - "80"
-####< symfony/mercure-bundle ###
+services:
+###> symfony/mercure-bundle ###
+  mercure:
+    ports:
+      - "8001:80"
+###< symfony/mercure-bundle ###
